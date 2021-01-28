@@ -1,0 +1,893 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+version="2.1">
+<persistence-unit name="jpademo" >
+<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+<properties>
+<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/jpademo"/>
+<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+<property name="hibernate.connection.password" value="mypass123$"/>
+<property name="hibernate.connection.username" value="root"/>
+<property name="hibernate.hbm2ddl.auto" value="create"/>
+<property name="hibernate.show_sql" value="true"/>
+<property name="hibernate.format_sql" value="true"/>
+</properties>
+</persistence-unit>
+</persistence>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+update(recommended in prod)
+1. create the table if it does not exist .
+2. it will alter the table if there is a change in the entity class.
+for ex :
+adding a field will result in alter the existing table at the db level.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1:16 PM] Senthil, Srividhya
+    
+@column
+​[1:16 PM] Senthil, Srividhya
+    
+@GeneratedValue(strategy=....)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1:08 PM] Manoj Pillamari (Guest)
+    https://web.microsoftstream.com/video/b436b98e-eae3-4e36-8a7f-a81cd1820604
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1:18 PM] Senthil, Srividhya
+    
+@OrderBy("firstname asc")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3:01 PM] Senthil, Srividhya
+    
+@Temporal(TemporalType.DATE)
+private Date empDOB;
+​[3:01 PM] Senthil, Srividhya
+    
+private boolean isPermanent;
+@Temporal(TemporalType.TIME)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+new Date(2005)
+
+
+
+
+
+
+
+
+
+
+
+@Entity(name="USER")
+public class User {
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+@GenericGenerator(name = "native", strategy = "native")
+@Column(name = "ID")
+private Long id;
+@Column(name="USER_NAME")
+private String userName;
+@Column(name="PASSWORD")
+private String password;
+@Temporal(value=TemporalType.TIMESTAMP)
+@Column(name="CREATED_TIME")
+private Date creationTime;
+@Temporal(value=TemporalType.TIMESTAMP)
+@Column(name="UPDATED_TIME")
+private Date updatedTime;
+@Temporal(value=TemporalType.DATE)
+@Column(name="DOB")
+private Date dateofBirth;
+@Enumerated(value=EnumType.STRING)
+@Column(name="USER_TYPE")
+private UserType userType;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public static void main( String[] args )
+{
+EntityManagerFactory emf = null;
+EntityManager entityManager = null;
+EntityTransaction transaction = null;
+try{
+emf = Persistence.createEntityManagerFactory("jbd-pu");
+entityManager = emf.createEntityManager();
+transaction = entityManager.getTransaction();
+transaction.begin();
+User user = new User();
+user.setUserName("mike");
+user.setPassword("password");
+// Setting Current Date
+user.setCreationTime(new Date());
+user.setDateofBirth(new Date());
+user.setUserType(UserType.EMPLOYEE);
+entityManager.persist(user);
+transaction.commit();
+}catch(Exception e){
+transaction.rollback();
+}finally{
+entityManager.close();
+emf.close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.marish.employee;
+
+ 
+
+import java.util.Date;
+
+ 
+
+import java.util.ArrayList;
+import java.util.List;
+
+ 
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+
+ 
+
+public class EmployeeMain {
+
+ 
+
+    public static void main(String[] args) {
+        
+
+ 
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("customer");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        
+        transaction.begin();
+        
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(new Date(), new Date(),
+                new Date(), "Sachin", 
+                1876543210L, 20000, 122, Status.WORK_FROM_HOME));
+        employees.add(new Employee(
+                new Date(), new Date(), 
+                new Date(), "Rohit", 1876543210L,
+                20000, 122, Status.ON_LEAVE));
+        for (Employee e : employees) {
+            em.persist(e);
+        }
+        
+        
+        transaction.commit();
+
+ 
+
+    }
+
+ 
+
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.marish.employee;
+
+ 
+
+import java.util.Date;
+
+ 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+ 
+
+
+enum Status{
+    ON_LEAVE,
+    WORK_FROM_HOME,    
+}
+@Entity
+@Table(name = "Employee")
+@SequenceGenerator(name = "seq", initialValue=100, allocationSize=100)
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq")
+    @Column(name = "EmployeeId")
+    private int employeeId;
+    
+
+ 
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    
+    @Temporal(TemporalType.DATE)
+    private Date joiningDate;
+    
+    @Temporal(TemporalType.TIME)
+    private Date lastLoginTime;
+    @Column(name = "EmployeeName", unique=true, nullable=false, length=100)
+    @OrderBy("EmployeeName")
+    private String employeeName;
+    
+    @Column(name = "EmployeePhone")
+    private long employeePhone;
+    
+    @Column(name = "EmployeeSalary")
+    private long employeeSalary;
+    
+    @Column(name = "Status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    
+    
+    @Transient
+    @Column(name = "Secret Code")
+    private int secretCode;
+    
+    public int getEmployeeId() {
+        return employeeId;
+    }
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
+ 
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+    public long getEmployeePhone() {
+        return employeePhone;
+    }
+    public void setEmployeePhone(long employeePhone) {
+        this.employeePhone = employeePhone;
+    }
+    public long getEmployeeSalary() {
+        return employeeSalary;
+    }
+    public void setEmployeeSalary(long employeeSalary) {
+        this.employeeSalary = employeeSalary;
+    }
+    public Employee(Date createdAt, Date joiningDate, Date lastLogin, String employeeName, long employeePhone, long employeeSalary,
+            int secretCode, Status status) {
+        super();
+        this.createdAt = createdAt;
+        this.joiningDate = joiningDate;
+        this.lastLoginTime = lastLogin;
+        this.employeeName = employeeName;
+        this.employeePhone = employeePhone;
+        this.employeeSalary = employeeSalary;
+        this.secretCode = secretCode;
+        this.status = status;
+    }
+
+ 
+
+    
+
+ 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HelloWorld hw = new HelloWorld();
+// hw.setMessageId(1);
+//hw.setMessage("Hello to jpa");
+//em.persist(hw);
+// Creating a second entity object
+// HelloWorld hwo= new HelloWorld();
+// hwo.setMessageId(2);
+// hwo.setMessage("HelloWorld");
+// em.persist(hwo);
+//
+//
+// transaction.commit();
+//
+//
+// HelloWorld hw1 = em.find(HelloWorld.class, 1);
+// em.getTransaction().begin();
+// hw1.setMessage(" Hello jpa");
+// em.getTransaction().commit();
+//
+// HelloWorld hw2 = em.find(HelloWorld.class, 2);
+// transaction.begin();
+// em.getTransaction();
+// em.remove(hw2);
+// em.getTransaction().commit();
+em.close();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.cg.ex1;
+
+ 
+
+ 
+
+import java.util.Date;
+
+ 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+ 
+
+ 
+
+
+    @Entity
+    @Table(name="user")
+    public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    
+    @Column(name = "ID")
+    private Long id;
+@Column(name="USER_NAME")
+private String username;
+//    
+    
+
+ 
+
+    @Temporal(value=TemporalType.TIMESTAMP)
+    @Column(name="CREATED_TIME")
+    private Date creationTime;
+                                                        //    @Temporal(value=TemporalType.TIMESTAMP)
+                                                        //    @Column(name="UPDATED_TIME")
+                                                        //    private Date updatedTime;
+    @Temporal(value=TemporalType.DATE)
+    @Column(name="DOB")
+    private Date dateofBirth;
+    //@Enumerated(value=EnumType.STRING)
+    @Column(name="USER_TYPE")
+    private UserType userType;
+    
+    
+    public UserType getUserType(UserType userType) {
+        return userType;
+    }
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+    
+    public Date getCreationTime() {
+        return creationTime;
+    }
+    
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
+    public Date getDateofBirth() {
+        return dateofBirth;
+    }
+    
+    public void setDateofBirth(Date dateofBirth) {
+        this.dateofBirth = dateofBirth;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    
+}
+    
+    
+    
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import javax.persistence.Embeddable;
+
+ 
+
+@Embeddable
+public class UserType {
+    private String username;
+    private String password;
+    public String getUserName() {
+        return username;
+    }
+    public void setUserName(String username) {
+        this.username = username;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    @Override
+    public String toString() {
+        return "UserType [username=" + username + ", password=" + password + "]";
+    }
+    
+
+ 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4:36 PM] GOKUL M P (Guest)
+    
+package com.marish.customer.demo.main2;
+
+
+import java.sql.Date;
+
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+
+
+import com.cg.ex1.User;
+import com.cg.ex1.UserType;
+
+
+
+
+public class MainClass {​​​​​​​
+
+
+    public static void main( String[] args )
+    {​​​​​​​
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("customer");
+    EntityManager entityManager = emf.createEntityManager();
+    EntityTransaction transaction =entityManager.getTransaction();
+    transaction.begin();
+
+
+    try{​​​​​​​
+    
+    User user = new User();
+    UserType ut = new UserType();
+    ut.setUserName("gokul");
+    ut.setPassword("123456789");
+    user.setUserType(ut);
+    user.setUsername("gokulmp");
+    // Setting Current Date
+    user.setCreationTime(new Date(2000-07-02));
+    user.setDateofBirth(new Date(2000-07-02));
+    entityManager.persist(user);
+    transaction.commit();
+    }​​​​​​​catch(Exception e){​​​​​​​
+    transaction.rollback();
+    }​​​​​​​finally{​​​​​​​
+    entityManager.close();
+    //emf.close();
+    }​​​​​​​
+    }​​​​​​​
+}​​​​​​​
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
